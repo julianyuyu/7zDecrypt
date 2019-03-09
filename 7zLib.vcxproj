@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{7DE9B78E-2B7D-4A13-A525-60F47D24F89A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>7zLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)$(Platform)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)$(Platform)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)$(Platform)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)$(Platform)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>EXTERNAL_CODECS;WIN_LONG_PATH;_7ZIP_LARGE_PAGES;SUPPORT_DEVICE_FILE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>EXTERNAL_CODECS;WIN_LONG_PATH;_7ZIP_LARGE_PAGES;SUPPORT_DEVICE_FILE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>EXTERNAL_CODECS;WIN_LONG_PATH;_7ZIP_LARGE_PAGES;SUPPORT_DEVICE_FILE;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>EXTERNAL_CODECS;WIN_LONG_PATH;_7ZIP_LARGE_PAGES;SUPPORT_DEVICE_FILE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="CPP\7zip\UI\Console\BenchCon.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\ConsoleClose.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\ExtractCallbackConsole.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\HashCon.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\List.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\OpenCallbackConsole.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\PercentPrinter.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\UpdateCallbackConsole.h" />
+    <ClInclude Include="CPP\7zip\UI\Console\UserInputUtils.h" />
+    <ClInclude Include="C\7zCrc.h" />
+    <ClInclude Include="C\Alloc.h" />
+    <ClInclude Include="C\Compiler.h" />
+    <ClInclude Include="C\CpuArch.h" />
+    <ClInclude Include="C\DllSecur.h" />
+    <ClInclude Include="C\Sort.h" />
+    <ClInclude Include="C\Threads.h" />
+    <ClInclude Include="CPP\7zip\Archive\Common\OutStreamWithCRC.h" />
+    <ClInclude Include="CPP\7zip\Common\CreateCoder.h" />
+    <ClInclude Include="CPP\7zip\Common\FilePathAutoRename.h" />
+    <ClInclude Include="CPP\7zip\Common\FileStreams.h" />
+    <ClInclude Include="CPP\7zip\Common\FilterCoder.h" />
+    <ClInclude Include="CPP\7zip\Common\LimitedStreams.h" />
+    <ClInclude Include="CPP\7zip\Common\MethodProps.h" />
+    <ClInclude Include="CPP\7zip\Common\ProgressUtils.h" />
+    <ClInclude Include="CPP\7zip\Common\StreamObjects.h" />
+    <ClInclude Include="CPP\7zip\Common\StreamUtils.h" />
+    <ClInclude Include="CPP\7zip\Common\UniqBlocks.h" />
+    <ClInclude Include="CPP\7zip\Compress\CopyCoder.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\ArchiveCommandLine.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\ArchiveExtractCallback.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\ArchiveOpenCallback.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\Bench.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\DefaultName.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\EnumDirItems.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\Extract.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\ExtractingFilePath.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\HashCalc.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\IFileExtractCallback.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\LoadCodecs.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\OpenArchive.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\PropIDUtils.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\SetProperties.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\SortUtils.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\StdAfx.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\TempFiles.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\Update.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\UpdateAction.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\UpdateCallback.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\UpdatePair.h" />
+    <ClInclude Include="CPP\7zip\UI\Common\UpdateProduce.h" />
+    <ClInclude Include="CPP\Common\CommandLineParser.h" />
+    <ClInclude Include="CPP\Common\Defs.h" />
+    <ClInclude Include="CPP\Common\IntToString.h" />
+    <ClInclude Include="CPP\Common\ListFileUtils.h" />
+    <ClInclude Include="CPP\Common\MyString.h" />
+    <ClInclude Include="CPP\Common\MyVector.h" />
+    <ClInclude Include="CPP\Common\StdAfx.h" />
+    <ClInclude Include="CPP\Common\StdInStream.h" />
+    <ClInclude Include="CPP\Common\StdOutStream.h" />
+    <ClInclude Include="CPP\Common\StringConvert.h" />
+    <ClInclude Include="CPP\Common\StringToInt.h" />
+    <ClInclude Include="CPP\Common\UTFConvert.h" />
+    <ClInclude Include="CPP\Common\Wildcard.h" />
+    <ClInclude Include="CPP\Windows\DLL.h" />
+    <ClInclude Include="CPP\Windows\ErrorMsg.h" />
+    <ClInclude Include="CPP\Windows\FileDir.h" />
+    <ClInclude Include="CPP\Windows\FileFind.h" />
+    <ClInclude Include="CPP\Windows\FileIO.h" />
+    <ClInclude Include="CPP\Windows\FileName.h" />
+    <ClInclude Include="CPP\Windows\FileSystem.h" />
+    <ClInclude Include="CPP\Windows\MemoryLock.h" />
+    <ClInclude Include="CPP\Windows\PropVariant.h" />
+    <ClInclude Include="CPP\Windows\PropVariantConv.h" />
+    <ClInclude Include="CPP\Windows\Registry.h" />
+    <ClInclude Include="CPP\Windows\System.h" />
+    <ClInclude Include="CPP\Windows\TimeUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CPP\7zip\UI\Console\BenchCon.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\ConsoleClose.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\ExtractCallbackConsole.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\HashCon.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\List.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\OpenCallbackConsole.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\PercentPrinter.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\UpdateCallbackConsole.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Console\UserInputUtils.cpp" />
+    <ClCompile Include="C\7zCrc.c" />
+    <ClCompile Include="C\7zCrcOpt.c" />
+    <ClCompile Include="C\Alloc.c" />
+    <ClCompile Include="C\CpuArch.c" />
+    <ClCompile Include="C\DllSecur.c" />
+    <ClCompile Include="C\Sort.c" />
+    <ClCompile Include="C\Threads.c" />
+    <ClCompile Include="CPP\7zip\Archive\Common\OutStreamWithCRC.cpp" />
+    <ClCompile Include="CPP\7zip\Common\CreateCoder.cpp" />
+    <ClCompile Include="CPP\7zip\Common\FilePathAutoRename.cpp" />
+    <ClCompile Include="CPP\7zip\Common\FileStreams.cpp" />
+    <ClCompile Include="CPP\7zip\Common\FilterCoder.cpp" />
+    <ClCompile Include="CPP\7zip\Common\LimitedStreams.cpp" />
+    <ClCompile Include="CPP\7zip\Common\MethodProps.cpp" />
+    <ClCompile Include="CPP\7zip\Common\ProgressUtils.cpp" />
+    <ClCompile Include="CPP\7zip\Common\PropId.cpp" />
+    <ClCompile Include="CPP\7zip\Common\StreamObjects.cpp" />
+    <ClCompile Include="CPP\7zip\Common\StreamUtils.cpp" />
+    <ClCompile Include="CPP\7zip\Common\UniqBlocks.cpp" />
+    <ClCompile Include="CPP\7zip\Compress\CopyCoder.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\ArchiveCommandLine.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\ArchiveExtractCallback.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\ArchiveOpenCallback.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\Bench.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\DefaultName.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\EnumDirItems.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\Extract.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\ExtractingFilePath.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\HashCalc.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\LoadCodecs.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\OpenArchive.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\PropIDUtils.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\SetProperties.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\SortUtils.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\TempFiles.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\Update.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\UpdateAction.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\UpdateCallback.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\UpdatePair.cpp" />
+    <ClCompile Include="CPP\7zip\UI\Common\UpdateProduce.cpp" />
+    <ClCompile Include="CPP\Common\CommandLineParser.cpp" />
+    <ClCompile Include="CPP\Common\CRC.cpp" />
+    <ClCompile Include="CPP\Common\IntToString.cpp" />
+    <ClCompile Include="CPP\Common\ListFileUtils.cpp" />
+    <ClCompile Include="CPP\Common\MyString.cpp" />
+    <ClCompile Include="CPP\Common\MyVector.cpp" />
+    <ClCompile Include="CPP\Common\StdInStream.cpp" />
+    <ClCompile Include="CPP\Common\StdOutStream.cpp" />
+    <ClCompile Include="CPP\Common\StringConvert.cpp" />
+    <ClCompile Include="CPP\Common\StringToInt.cpp" />
+    <ClCompile Include="CPP\Common\UTFConvert.cpp" />
+    <ClCompile Include="CPP\Common\Wildcard.cpp" />
+    <ClCompile Include="CPP\Windows\DLL.cpp" />
+    <ClCompile Include="CPP\Windows\ErrorMsg.cpp" />
+    <ClCompile Include="CPP\Windows\FileDir.cpp" />
+    <ClCompile Include="CPP\Windows\FileFind.cpp" />
+    <ClCompile Include="CPP\Windows\FileIO.cpp" />
+    <ClCompile Include="CPP\Windows\FileLink.cpp" />
+    <ClCompile Include="CPP\Windows\FileName.cpp" />
+    <ClCompile Include="CPP\Windows\FileSystem.cpp" />
+    <ClCompile Include="CPP\Windows\MemoryLock.cpp" />
+    <ClCompile Include="CPP\Windows\PropVariant.cpp" />
+    <ClCompile Include="CPP\Windows\PropVariantConv.cpp" />
+    <ClCompile Include="CPP\Windows\Registry.cpp" />
+    <ClCompile Include="CPP\Windows\System.cpp" />
+    <ClCompile Include="CPP\Windows\TimeUtils.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

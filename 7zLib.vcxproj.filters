@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="C">
+      <UniqueIdentifier>{adbd7cd3-a7e2-496b-b6ed-1a89c0b6833f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C\crc">
+      <UniqueIdentifier>{30d93834-26cc-40a5-9a49-c1f09b08b567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{2fe8ad48-0b6f-4238-b8ad-2b0d333a2bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress">
+      <UniqueIdentifier>{7bf6cedf-2378-4ca5-9336-ca9ffa14c140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UICommon">
+      <UniqueIdentifier>{9aaace87-993f-4f3a-a560-0c4ad6b44b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{c950ccfa-bfcd-48a1-af24-134e189ea762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCommon">
+      <UniqueIdentifier>{29ef8201-84b2-4424-888a-5d0674e29a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="7ZipCommon">
+      <UniqueIdentifier>{cbb04575-4193-40fa-b8ca-e183ac0bead0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Console">
+      <UniqueIdentifier>{f1313112-fc18-4a7d-b6d4-3c0cbc9a39c2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CPP\Common\MyString.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyVector.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StdAfx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StdInStream.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StdOutStream.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StringConvert.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StringToInt.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\UTFConvert.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\Wildcard.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\CommandLineParser.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\Defs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\IntToString.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\ListFileUtils.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\System.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\TimeUtils.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\DLL.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\ErrorMsg.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileDir.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileFind.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileIO.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileName.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileSystem.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\MemoryLock.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\PropVariant.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\PropVariantConv.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\Registry.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\FileStreams.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\FilterCoder.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\LimitedStreams.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\MethodProps.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\ProgressUtils.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\StreamObjects.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\StreamUtils.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\UniqBlocks.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\CreateCoder.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\FilePathAutoRename.h">
+      <Filter>7ZipCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\OutStreamWithCRC.h">
+      <Filter>ARCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\CopyCoder.h">
+      <Filter>Compress</Filter>
+    </ClInclude>
+    <ClInclude Include="C\CpuArch.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Sort.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Threads.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Alloc.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Compiler.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="C\DllSecur.h">
+      <Filter>C</Filter>
+    </ClInclude>
+    <ClInclude Include="C\7zCrc.h">
+      <Filter>C\crc</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\ArchiveCommandLine.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\ArchiveExtractCallback.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\ArchiveOpenCallback.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\Bench.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\DefaultName.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\EnumDirItems.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\Extract.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\ExtractingFilePath.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\HashCalc.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\IFileExtractCallback.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\LoadCodecs.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\OpenArchive.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\PropIDUtils.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\SetProperties.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\SortUtils.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\StdAfx.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\TempFiles.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\Update.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\UpdateAction.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\UpdateCallback.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\UpdatePair.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Common\UpdateProduce.h">
+      <Filter>UICommon</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\BenchCon.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\ConsoleClose.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\ExtractCallbackConsole.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\HashCon.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\List.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\OpenCallbackConsole.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\PercentPrinter.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\UpdateCallbackConsole.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\UI\Console\UserInputUtils.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CPP\Common\MyVector.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\StdInStream.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\StdOutStream.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\StringConvert.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\StringToInt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\UTFConvert.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\Wildcard.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\CommandLineParser.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\CRC.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\IntToString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\ListFileUtils.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\MyString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\TimeUtils.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\DLL.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\ErrorMsg.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileDir.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileFind.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileIO.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileLink.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileName.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileSystem.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\MemoryLock.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\PropVariant.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\PropVariantConv.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\Registry.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\System.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\FileStreams.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\FilterCoder.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\LimitedStreams.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\MethodProps.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\ProgressUtils.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\PropId.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\StreamObjects.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\StreamUtils.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\UniqBlocks.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\CreateCoder.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\FilePathAutoRename.cpp">
+      <Filter>7ZipCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\OutStreamWithCRC.cpp">
+      <Filter>ARCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\CopyCoder.cpp">
+      <Filter>Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="C\CpuArch.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Sort.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Threads.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Alloc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\DllSecur.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\7zCrcOpt.c">
+      <Filter>C\crc</Filter>
+    </ClCompile>
+    <ClCompile Include="C\7zCrc.c">
+      <Filter>C\crc</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\ArchiveCommandLine.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\ArchiveExtractCallback.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\ArchiveOpenCallback.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\Bench.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\DefaultName.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\EnumDirItems.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\Extract.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\ExtractingFilePath.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\HashCalc.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\LoadCodecs.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\OpenArchive.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\PropIDUtils.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\SetProperties.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\SortUtils.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\TempFiles.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\Update.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\UpdateAction.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\UpdateCallback.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\UpdatePair.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Common\UpdateProduce.cpp">
+      <Filter>UICommon</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\BenchCon.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\ConsoleClose.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\ExtractCallbackConsole.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\HashCon.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\List.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\OpenCallbackConsole.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\PercentPrinter.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\UpdateCallbackConsole.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\UI\Console\UserInputUtils.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
