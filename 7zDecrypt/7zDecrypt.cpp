@@ -3,11 +3,20 @@
 
 #include "pch.h"
 #include "7zDecrypt.h"
+#include "avpsync.h"
 
 using namespace NWindows;
 
 CStdOutStream *g_StdStream = NULL;
 CStdOutStream *g_ErrStream = NULL;
+
+void ThreadRun(
+    CArcCmdLineOptions& options,
+    CCodecs* codecs,
+    CExternalCodecs& externalCodecs, /*dont edit this name*/
+    CObjectVector<COpenType>& types,
+    CIntVector& excludedFormats,
+    wchar_t* PatternFile);
 
 int wmain(int argc, wchar_t** argv)
 {
@@ -17,6 +26,7 @@ int wmain(int argc, wchar_t** argv)
 
     CArcCmdLineOptions options;
     CCodecs* codecs;
+    CExternalCodecs externalCodecsDesc;
     CObjectVector<COpenType> types;
     CIntVector excludedFormats;
 
@@ -80,18 +90,90 @@ int wmain(int argc, wchar_t** argv)
     //    cmdstrings.Delete(0);
 
     // parse cmdstrings and build options, init codecs.
-    int ret = Init(cmdstrings, options, codecs, types, excludedFormats);
+    int ret = Init(cmdstrings, options, codecs, externalCodecsDesc, types, excludedFormats);
     if (!ret)
         return ret;
 
     if (isDecryptMode)
     {
-        DecryptingExecute(options, codecs, types, excludedFormats, PatternFileName);
+        ThreadRun(options, codecs, externalCodecsDesc, types, excludedFormats, PatternFileName);
+
+        //bool done = false;
+        //DecryptingExecute(options, codecs, externalCodecsDesc, types, excludedFormats, PatternFileName, &done);
     }
     else
     {
-        Execute(options, codecs, types, excludedFormats);
+        Execute(options, codecs, externalCodecsDesc, types, excludedFormats);
     }
     Release(codecs);
     return 0;
+}
+
+struct THREAD_CTXT
+{
+    int Index;
+    //bool ThreadDone; /*close flag, and also return true if success to decrypt*/
+    CArcCmdLineOptions* options;
+    CCodecs* codecs;
+    CExternalCodecs* externalCodecs;
+    CObjectVector<COpenType>* types;
+    CIntVector* excludedFormats;
+    wchar_t* PatternFile;
+};
+
+static bool GlobalDecryptDoneFlag = false;
+int g_ThreadCount = 1;
+
+DWORD WINAPI DecryptingProc(LPVOID param)
+{
+    THREAD_CTXT* ctxt = (THREAD_CTXT*)param;
+
+    DecryptingExecute(*ctxt->options,
+        ctxt->codecs,
+        *ctxt->externalCodecs,
+        *ctxt->types,
+        *ctxt->excludedFormats,
+        ctxt->PatternFile,
+        &GlobalDecryptDoneFlag,
+        ctxt->Index);
+
+    return 0;
+}
+
+void ThreadRun(
+    CArcCmdLineOptions& options,
+    CCodecs* codecs,
+    CExternalCodecs& externalCodecs, /*dont edit this name*/
+    CObjectVector<COpenType>& types,
+    CIntVector& excludedFormats,
+    wchar_t* PatternFile)
+{
+    const int threadNum = 4;
+    g_ThreadCount = threadNum;
+    AVPThread threads[threadNum];
+    THREAD_CTXT ctxt[threadNum];
+
+    // execture;
+    for (int i = 0; i < threadNum; i++)
+    {
+        //ctxt[i].ThreadDone = false;
+        ctxt[i].Index = i;
+        ctxt[i].options = &options;
+        ctxt[i].codecs = codecs;
+        ctxt[i].externalCodecs = &externalCodecs;
+        ctxt[i].types = &types;
+        ctxt[i].excludedFormats = &excludedFormats;
+        ctxt[i].PatternFile = PatternFile;
+
+        threads[i].Create(DecryptingProc, &ctxt[i]);
+
+    }
+
+    // wait for close
+    // TODO: should close once either thread succeeded to decrypt.
+    for (int i = 0; i < threadNum; i++)
+    {
+        threads[i].WaitClose();
+    }
+
 }

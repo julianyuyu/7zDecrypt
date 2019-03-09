@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7zConsole", "7zConsole.vcxp
 		{7DE9B78E-2B7D-4A13-A525-60F47D24F89A} = {7DE9B78E-2B7D-4A13-A525-60F47D24F89A}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7zLib", "7zLib.vcxproj", "{7DE9B78E-2B7D-4A13-A525-60F47D24F89A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7zipLib", "7zipLib.vcxproj", "{7DE9B78E-2B7D-4A13-A525-60F47D24F89A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

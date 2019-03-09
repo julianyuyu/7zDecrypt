@@ -28,16 +28,21 @@ int Release(CCodecs* codecs);
 int Init(UStringVector& cmdstrings,
     CArcCmdLineOptions& options,
     CCodecs* &outcodecs,
+    CExternalCodecs& __externalCodecs,
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats);
 
 int Execute(CArcCmdLineOptions& options,
     CCodecs* codecs,
+    CExternalCodecs& __externalCodecs,
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats);
 
 int DecryptingExecute(CArcCmdLineOptions& options,
     CCodecs* codecs,
+    CExternalCodecs& __externalCodecs,
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats,
-    wchar_t* PatternFile);
+    wchar_t* PatternFile,
+    bool* pDecryptDone,/*close flag, and also return true if success to decrypt*/
+    int ThreadIndex=0);

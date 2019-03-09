@@ -526,13 +526,13 @@ unsigned consoleWidth = 80;
 #undef CREATE_CODECS_OBJECT
 #define CREATE_CODECS_OBJECT \
     CCodecs *codecs = new CCodecs; \
-    /*CExternalCodecs __externalCodecs; */ \
+    /*CExternalCodecs __externalCodecs;*/ \
     __externalCodecs.GetCodecs = codecs; \
     __externalCodecs.GetHashers = codecs;
 
 /* CCodecs::CReleaser codecsReleaser;*/
     /*codecsReleaser.Set(codecs);*/
-CExternalCodecs __externalCodecs;
+//CExternalCodecs __externalCodecs;
 
 #define RELEASE_CODECS_OBJECT(codecs) \
 do{ \
@@ -554,6 +554,7 @@ int Release(CCodecs* codecs)
 int Init(UStringVector& commandStrings,
     CArcCmdLineOptions& options,
     CCodecs* &outcodecs,
+    CExternalCodecs& __externalCodecs, /* dont edit this name*/
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats)
 {
@@ -697,6 +698,7 @@ int Init(UStringVector& commandStrings,
   
   // JULIAN:
   outcodecs = codecs;
+  //externalCodecsDesc = __externalCodecs;
   //int retCode = NExitCode::kSuccess;
   //return retCode;
   return 1;// means success and ready to execute.
@@ -716,13 +718,18 @@ HRESULT DecryptingExtract(
 #endif
     UString &errorMessage,
     CDecompressStat &st,
-    wchar_t* PatternFile);
+    wchar_t* PatternFile,
+    int ThreadIndex,
+    bool* pDecryptDone/*close flag, and also return true if success to decrypt*/);
 
 int DecryptingExecute(CArcCmdLineOptions& options,
     CCodecs* codecs,
+    CExternalCodecs& __externalCodecs, /*dont edit this name*/
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats,
-    wchar_t* PatternFile)
+    wchar_t* PatternFile,
+    bool* pDecryptDone,/* = false*//*close flag, and also return true if success to decrypt*/
+    int ThreadIndex/*=0*/)
 {
     //JULIAN
     //bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
@@ -863,7 +870,7 @@ int DecryptingExecute(CArcCmdLineOptions& options,
             ArchivePathsFullSorted,
             options.Censor.Pairs.Front().Head,
             eo, ecs, ecs, hashCalc, errorMessage, stat,
-            PatternFile);
+            PatternFile, ThreadIndex, pDecryptDone);
 
         ecs->ClosePercents();
 
@@ -974,6 +981,7 @@ int DecryptingExecute(CArcCmdLineOptions& options,
 
 int Execute(CArcCmdLineOptions& options,
     CCodecs* codecs,
+    CExternalCodecs& __externalCodecs, /*dont edit this name*/
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats)
 {

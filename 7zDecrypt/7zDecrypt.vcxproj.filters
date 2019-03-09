@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{28403d1c-f2c4-446d-996f-c6d08da442e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -23,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="DecryptCbConsole.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="avpsync.h">
+      <Filter>thread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="DecryptCbConsole.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="avpsync.cpp">
+      <Filter>thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
