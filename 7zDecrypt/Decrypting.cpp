@@ -83,10 +83,111 @@ using namespace NFile;
 using namespace NDir;
 using namespace NCommandLineParser;
 
+//char Default_Dict[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+char Default_Dict[] = "0123456789";
+
+//char CurrPasswd[64];
+//unsigned int curr_len = 1; //current password length
+
 /* v9.31: BUG was fixed:
    Sorted list for file paths was sorted with case insensitive compare function.
    But FindInSorted function did binary search via case sensitive compare function */
 int Find_FileName_InSortedVector(const UStringVector &fileName, const UString &name);
+
+
+char* PasDict = nullptr;
+int DictLen = 0;
+int PasLen = 1;
+int MaxPasLen = 0;
+int* CharIndices = nullptr;
+char* CurrPas = nullptr;
+
+void PasswdInit(int minLen, int MaxLen, char* dict)
+{
+    PasDict = dict;
+    DictLen = strlen(PasDict);
+    MaxPasLen = MaxLen;
+
+    if (MaxPasLen > DictLen)
+    {
+        MaxPasLen = DictLen;
+    }
+
+    PasLen = minLen;
+    CharIndices = new int[MaxPasLen];
+    CurrPas = new char[MaxPasLen+1];
+    memset(CharIndices, 0, sizeof(int) * MaxPasLen);
+    memset(CurrPas, 0, sizeof(char) * (MaxPasLen+1));
+
+    for (int i = 0; i < PasLen; ++i)
+    {
+        CurrPas[i] = PasDict[0];
+    }
+}
+
+void PasswdExit()
+{
+    delete[] CurrPas;
+    delete[] CharIndices;
+}
+
+bool UpdatePassword(CDecryptCallbackConsole* consoleCb)
+{
+    //for (int i = 0; i < PasLen; ++i)
+    //{
+    //    CurrPas
+    //}
+    int NowIdx = PasLen - 1;
+
+    //CurrPas[NowIdx] = PasDict[CharIndices[NowIdx]];
+    //CharIndices[NowIdx]++;
+
+    // if all char in pas is last char in dict, then expand pas len.
+    int checkIdx = NowIdx;
+    bool NeedExpend = true;
+    while (checkIdx >= 0)
+    {
+        if (CharIndices[checkIdx] >= DictLen)
+        {
+            CharIndices[checkIdx] = 0;
+            CurrPas[checkIdx] = PasDict[0];
+            checkIdx--;
+
+            if (checkIdx < 0)
+                break;
+            CharIndices[checkIdx]++;
+        }
+        else
+        {
+            NeedExpend = false;
+            CurrPas[checkIdx] = PasDict[CharIndices[checkIdx]];
+            CharIndices[NowIdx]++; // update last bit.
+            break;
+        }
+    }
+
+    if (NeedExpend)
+    {
+        PasLen++;
+        if (PasLen > MaxPasLen)
+            return false;
+
+        for (int i = 0; i < PasLen; ++i)
+        {
+            CharIndices[i] = 0;
+            CurrPas[i] = PasDict[0];
+        }
+
+        CharIndices[PasLen - 1]++;
+    }
+
+    CurrPas[PasLen] = '\0';
+    
+    consoleCb->Password = UString(CurrPas);
+
+    return true;
+}
 
 // JULIAN
 HRESULT DecryptingLoop(
@@ -102,10 +203,12 @@ HRESULT DecryptingLoop(
 
     CDecryptCallbackConsole* consoleCb = static_cast<CDecryptCallbackConsole *>(consoleCallback);
 
-    int maxcount = 200;
-    int printuint = 30;
+    int maxcount = 1000;
+    int printuint = 200;
     int totalcount = 0;
     bool correct = false;
+
+    PasswdInit(4, 10, Default_Dict);
 
     if (archive)
     {
@@ -114,22 +217,30 @@ HRESULT DecryptingLoop(
 
             result = archive->Extract(&index, 1, testMode, extractCallback);
 
-            
             // update password
-            if (totalcount == 180)
-                consoleCb->Password = UString("b");
+            //if (totalcount == 180)
+            //    consoleCb->Password = UString("b");
+            if (!UpdatePassword(consoleCb))
+                break;
 
             totalcount++;
             correct = !consoleCb->IsWrongPassword();
 
             if (so)
             {
+                //*so << endl << "Passwd:" << consoleCb->Password;
                 if ((totalcount % printuint) == 0)
+                {
                     *so << endl << "Tried Times : " << totalcount;
+                    *so << endl << "Passwd:" << consoleCb->Password;
+
+                }
 
             }
-        } while (!correct && totalcount < maxcount);
+        } while (!correct/* && totalcount < maxcount*/);
     }
+
+    PasswdExit();
 
     if (so)
     {

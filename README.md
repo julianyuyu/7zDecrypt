@@ -4,8 +4,8 @@
 build on top of [7zip](https://www.7-zip.org/)(Ver 19.00). 
 
 ## Usage
-7zDecrypt.exe <archive.ext>
-7zDecrypt.exe -f Dict.txt <archive.ext> (TBD)
+- 7zDecrypt.exe <archive.ext> (not ready)
+- 7zDecrypt.exe -f Dict.txt <archive.ext> (TBD)
 
 ## Build
 1. download 7zip source code, put the folder of C and CPP in the root folder of 7zDecrypt.
