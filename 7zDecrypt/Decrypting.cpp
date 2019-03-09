@@ -96,98 +96,206 @@ char Default_Dict[] = "0123456789";
 int Find_FileName_InSortedVector(const UStringVector &fileName, const UString &name);
 
 
-char* PasDict = nullptr;
-int DictLen = 0;
-int PasLen = 1;
-int MaxPasLen = 0;
-int* CharIndices = nullptr;
-char* CurrPas = nullptr;
-
-void PasswdInit(int minLen, int MaxLen, char* dict)
+class PasswordGenerator
 {
-    PasDict = dict;
-    DictLen = strlen(PasDict);
-    MaxPasLen = MaxLen;
+public:
+    PasswordGenerator() {}
+    ~PasswordGenerator() { Destroy(); }
 
-    if (MaxPasLen > DictLen)
+    void Initialize(int minLen, int MaxLen, char* dict,
+        int partNum=1/*how many part will the dict devided to*/,
+        int partIdx=0/*which part this generator will handle*/)
     {
-        MaxPasLen = DictLen;
-    }
+        //init port devidtion
 
-    PasLen = minLen;
-    CharIndices = new int[MaxPasLen];
-    CurrPas = new char[MaxPasLen+1];
-    memset(CharIndices, 0, sizeof(int) * MaxPasLen);
-    memset(CurrPas, 0, sizeof(char) * (MaxPasLen+1));
 
-    for (int i = 0; i < PasLen; ++i)
-    {
-        CurrPas[i] = PasDict[0];
-    }
-}
+        m_PasDict = dict;
+        m_DictLen = strlen(m_PasDict);
+        m_MaxPasLen = MaxLen;
 
-void PasswdExit()
-{
-    delete[] CurrPas;
-    delete[] CharIndices;
-}
-
-bool UpdatePassword(CDecryptCallbackConsole* consoleCb)
-{
-    //for (int i = 0; i < PasLen; ++i)
-    //{
-    //    CurrPas
-    //}
-    int NowIdx = PasLen - 1;
-
-    //CurrPas[NowIdx] = PasDict[CharIndices[NowIdx]];
-    //CharIndices[NowIdx]++;
-
-    // if all char in pas is last char in dict, then expand pas len.
-    int checkIdx = NowIdx;
-    bool NeedExpend = true;
-    while (checkIdx >= 0)
-    {
-        if (CharIndices[checkIdx] >= DictLen)
+        if (m_MaxPasLen > m_DictLen)
         {
-            CharIndices[checkIdx] = 0;
-            CurrPas[checkIdx] = PasDict[0];
-            checkIdx--;
+            m_MaxPasLen = m_DictLen;
+        }
 
-            if (checkIdx < 0)
+        m_PasLen = minLen;
+        m_CharIndices = new int[m_MaxPasLen];
+        m_CurrPas = new char[m_MaxPasLen + 1];
+        memset(m_CharIndices, 0, sizeof(int) * m_MaxPasLen);
+        memset(m_CurrPas, 0, sizeof(char) * (m_MaxPasLen + 1));
+
+        for (int i = 0; i < m_PasLen; ++i)
+        {
+            m_CurrPas[i] = m_PasDict[0];
+        }
+    }
+
+    void Destroy()
+    {
+        delete[] m_CurrPas;
+        delete[] m_CharIndices;
+    }
+
+    char* UpdatePassword()
+    {
+        //for (int i = 0; i < PasLen; ++i)
+        //{
+        //    CurrPas
+        //}
+        int NowIdx = m_PasLen - 1;
+
+        //CurrPas[NowIdx] = m_PasDict[CharIndices[NowIdx]];
+        //CharIndices[NowIdx]++;
+
+        // if all char in pas is last char in dict, then expand pas len.
+        int checkIdx = NowIdx;
+        bool NeedExpend = true;
+        while (checkIdx >= 0)
+        {
+            if (m_CharIndices[checkIdx] >= m_DictLen)
+            {
+                m_CharIndices[checkIdx] = 0;
+                m_CurrPas[checkIdx] = m_PasDict[0];
+                checkIdx--;
+
+                if (checkIdx < 0)
+                    break;
+                m_CharIndices[checkIdx]++;
+            }
+            else
+            {
+                NeedExpend = false;
+                m_CurrPas[checkIdx] = m_PasDict[m_CharIndices[checkIdx]];
+                m_CharIndices[NowIdx]++; // update last bit.
                 break;
-            CharIndices[checkIdx]++;
+            }
         }
-        else
+
+        if (NeedExpend)
         {
-            NeedExpend = false;
-            CurrPas[checkIdx] = PasDict[CharIndices[checkIdx]];
-            CharIndices[NowIdx]++; // update last bit.
-            break;
-        }
-    }
+            m_PasLen++;
+            if (m_PasLen > m_MaxPasLen)
+                return nullptr;
 
-    if (NeedExpend)
-    {
-        PasLen++;
-        if (PasLen > MaxPasLen)
-            return false;
+            for (int i = 0; i < m_PasLen; ++i)
+            {
+                m_CharIndices[i] = 0;
+                m_CurrPas[i] = m_PasDict[0];
+            }
 
-        for (int i = 0; i < PasLen; ++i)
-        {
-            CharIndices[i] = 0;
-            CurrPas[i] = PasDict[0];
+            m_CharIndices[m_PasLen - 1]++;
         }
 
-        CharIndices[PasLen - 1]++;
+        m_CurrPas[m_PasLen] = '\0';
+
+        //m_ConsoleCb->Password = UString(CurrPas);
+
+        return m_CurrPas;
     }
+protected:
+    char* m_PasDict = nullptr;
+    int m_DictLen = 0;
+    int m_PasLen = 1;
+    int m_MaxPasLen = 0;
+    int* m_CharIndices = nullptr;
+    char* m_CurrPas = nullptr;
 
-    CurrPas[PasLen] = '\0';
-    
-    consoleCb->Password = UString(CurrPas);
-
-    return true;
-}
+    int m_PartNum = 1;/*how many part will the dict divided to*/
+    int m_PartIdx = 0;/*which part this generator will handle*/
+};
+//
+//char* PasDict = nullptr;
+//int DictLen = 0;
+//int PasLen = 1;
+//int MaxPasLen = 0;
+//int* CharIndices = nullptr;
+//char* CurrPas = nullptr;
+//
+//void PasswdInit(int minLen, int MaxLen, char* dict)
+//{
+//    PasDict = dict;
+//    DictLen = strlen(PasDict);
+//    MaxPasLen = MaxLen;
+//
+//    if (MaxPasLen > DictLen)
+//    {
+//        MaxPasLen = DictLen;
+//    }
+//
+//    PasLen = minLen;
+//    CharIndices = new int[MaxPasLen];
+//    CurrPas = new char[MaxPasLen+1];
+//    memset(CharIndices, 0, sizeof(int) * MaxPasLen);
+//    memset(CurrPas, 0, sizeof(char) * (MaxPasLen+1));
+//
+//    for (int i = 0; i < PasLen; ++i)
+//    {
+//        CurrPas[i] = PasDict[0];
+//    }
+//}
+//
+//void PasswdExit()
+//{
+//    delete[] CurrPas;
+//    delete[] CharIndices;
+//}
+//
+//bool UpdatePassword(CDecryptCallbackConsole* consoleCb)
+//{
+//    //for (int i = 0; i < PasLen; ++i)
+//    //{
+//    //    CurrPas
+//    //}
+//    int NowIdx = PasLen - 1;
+//
+//    //CurrPas[NowIdx] = PasDict[CharIndices[NowIdx]];
+//    //CharIndices[NowIdx]++;
+//
+//    // if all char in pas is last char in dict, then expand pas len.
+//    int checkIdx = NowIdx;
+//    bool NeedExpend = true;
+//    while (checkIdx >= 0)
+//    {
+//        if (CharIndices[checkIdx] >= DictLen)
+//        {
+//            CharIndices[checkIdx] = 0;
+//            CurrPas[checkIdx] = PasDict[0];
+//            checkIdx--;
+//
+//            if (checkIdx < 0)
+//                break;
+//            CharIndices[checkIdx]++;
+//        }
+//        else
+//        {
+//            NeedExpend = false;
+//            CurrPas[checkIdx] = PasDict[CharIndices[checkIdx]];
+//            CharIndices[NowIdx]++; // update last bit.
+//            break;
+//        }
+//    }
+//
+//    if (NeedExpend)
+//    {
+//        PasLen++;
+//        if (PasLen > MaxPasLen)
+//            return false;
+//
+//        for (int i = 0; i < PasLen; ++i)
+//        {
+//            CharIndices[i] = 0;
+//            CurrPas[i] = PasDict[0];
+//        }
+//
+//        CharIndices[PasLen - 1]++;
+//    }
+//
+//    CurrPas[PasLen] = '\0';
+//    
+//    consoleCb->Password = UString(CurrPas);
+//
+//    return true;
+//}
 
 // JULIAN
 HRESULT DecryptingLoop(
@@ -204,15 +312,16 @@ HRESULT DecryptingLoop(
     CDecryptCallbackConsole* consoleCb = static_cast<CDecryptCallbackConsole *>(consoleCallback);
 
     int maxcount = 1000;
-    int printuint = 200;
+    int printuint = 10;
     int totalcount = 0;
     bool correct = false;
 
-    PasswdInit(4, 10, Default_Dict);
-
-    if (archive)
+    //PasswdInit(4, 10, Default_Dict);
+    PasswordGenerator pasGen;
+    pasGen.Initialize(4, 10, Default_Dict);
+    char* curr;
+    if (archive && so)
     {
-
         do {
 
             result = archive->Extract(&index, 1, testMode, extractCallback);
@@ -220,13 +329,17 @@ HRESULT DecryptingLoop(
             // update password
             //if (totalcount == 180)
             //    consoleCb->Password = UString("b");
-            if (!UpdatePassword(consoleCb))
+            //if (!UpdatePassword(consoleCb))
+            curr = pasGen.UpdatePassword();
+            if (!curr)
                 break;
 
-            totalcount++;
+            consoleCb->Password = UString(curr);
             correct = !consoleCb->IsWrongPassword();
 
-            if (so)
+            totalcount++;
+
+            //if (so)
             {
                 //*so << endl << "Passwd:" << consoleCb->Password;
                 if ((totalcount % printuint) == 0)
@@ -240,7 +353,7 @@ HRESULT DecryptingLoop(
         } while (!correct/* && totalcount < maxcount*/);
     }
 
-    PasswdExit();
+    //PasswdExit();
 
     if (so)
     {
