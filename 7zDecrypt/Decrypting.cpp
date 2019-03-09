@@ -102,32 +102,62 @@ public:
     PasswordGenerator() {}
     ~PasswordGenerator() { Destroy(); }
 
-    void Initialize(int minLen, int MaxLen, char* dict,
+    bool Initialize(int minLen, int MaxLen, char* dict,
         int partNum=1/*how many part will the dict devided to*/,
         int partIdx=0/*which part this generator will handle*/)
     {
-        //init port devidtion
-
-
         m_PasDict = dict;
         m_DictLen = strlen(m_PasDict);
-        m_MaxPasLen = MaxLen;
 
+        m_MaxPasLen = MaxLen;
         if (m_MaxPasLen > m_DictLen)
         {
             m_MaxPasLen = m_DictLen;
         }
 
+        //init port devidtion
+        m_PartNum = partNum;
+        m_PartIdx = partIdx;
+        if (m_PartNum > m_DictLen)
+            m_PartNum = m_DictLen;
+        if (partIdx >= m_PartNum)
+            return false;
+
+        m_Char1IdxStart = 0;
+        m_Char1IdxEnd = m_DictLen;
+
+        // set range for first char, 
+        // PasGenerator of current PortIdx will only handle in this range.
+        if (m_PartNum > 1)
+        {
+            int portlen = (m_DictLen + m_PartNum - 1) / m_PartNum;
+            int firstChar_IdxStart = portlen * m_PartIdx;
+            int firstChar_idxEnd = firstChar_IdxStart + portlen;
+
+            if (firstChar_IdxStart > m_DictLen)
+                firstChar_IdxStart = 0; // should not be here.
+            if (firstChar_idxEnd > m_DictLen)
+                firstChar_idxEnd = m_DictLen;
+            m_Char1IdxStart = firstChar_IdxStart;
+            m_Char1IdxEnd = firstChar_idxEnd;
+        }
+
         m_PasLen = minLen;
         m_CharIndices = new int[m_MaxPasLen];
         m_CurrPas = new char[m_MaxPasLen + 1];
-        memset(m_CharIndices, 0, sizeof(int) * m_MaxPasLen);
-        memset(m_CurrPas, 0, sizeof(char) * (m_MaxPasLen + 1));
 
-        for (int i = 0; i < m_PasLen; ++i)
+        //memset(m_CharIndices, 0, sizeof(int) * m_MaxPasLen);
+        //memset(m_CurrPas, 0, sizeof(char) * (m_MaxPasLen + 1));
+        for (int i = 1; i < m_PasLen; ++i)
         {
+            m_CharIndices[i] = 0;
             m_CurrPas[i] = m_PasDict[0];
         }
+
+        // init idx for first char
+        m_CharIndices[0] = m_Char1IdxStart;
+        m_CurrPas[0] = m_PasDict[m_Char1IdxStart];
+        return true;
     }
 
     void Destroy()
@@ -152,22 +182,47 @@ public:
         bool NeedExpend = true;
         while (checkIdx >= 0)
         {
-            if (m_CharIndices[checkIdx] >= m_DictLen)
+            if (checkIdx!=0)
             {
-                m_CharIndices[checkIdx] = 0;
-                m_CurrPas[checkIdx] = m_PasDict[0];
-                checkIdx--;
+                if (m_CharIndices[checkIdx] >= m_DictLen)
+                {
+                    m_CharIndices[checkIdx] = 0;
+                    m_CurrPas[checkIdx] = m_PasDict[0];
+                    checkIdx--;
 
-                if (checkIdx < 0)
+                    if (checkIdx < 0)
+                        break;
+                    m_CharIndices[checkIdx]++;
+                }
+                else
+                {
+                    NeedExpend = false;
+                    m_CurrPas[checkIdx] = m_PasDict[m_CharIndices[checkIdx]];
+                    m_CharIndices[NowIdx]++; // update last bit.(dont use checkIdx here, in case it has been '--')
                     break;
-                m_CharIndices[checkIdx]++;
+                }
             }
             else
             {
-                NeedExpend = false;
-                m_CurrPas[checkIdx] = m_PasDict[m_CharIndices[checkIdx]];
-                m_CharIndices[NowIdx]++; // update last bit.
-                break;
+                // handle char 1, which will control the part.
+
+                if (m_CharIndices[checkIdx] >= m_Char1IdxEnd)
+                {
+                    m_CharIndices[checkIdx] = m_Char1IdxStart;
+                    m_CurrPas[checkIdx] = m_PasDict[m_Char1IdxStart];
+                    //checkIdx--;
+
+                    //if (checkIdx < 0)
+                    break;
+                    //m_CharIndices[checkIdx]++;
+                }
+                else
+                {
+                    NeedExpend = false;
+                    m_CurrPas[checkIdx] = m_PasDict[m_CharIndices[checkIdx]];
+                    m_CharIndices[NowIdx]++; // update last bit.
+                    break;
+                }
             }
         }
 
@@ -177,11 +232,13 @@ public:
             if (m_PasLen > m_MaxPasLen)
                 return nullptr;
 
-            for (int i = 0; i < m_PasLen; ++i)
+            for (int i = 1; i < m_PasLen; ++i)
             {
                 m_CharIndices[i] = 0;
                 m_CurrPas[i] = m_PasDict[0];
             }
+            m_CharIndices[0] = m_Char1IdxStart;
+            m_CurrPas[0] = m_PasDict[m_Char1IdxStart];
 
             m_CharIndices[m_PasLen - 1]++;
         }
@@ -202,6 +259,8 @@ protected:
 
     int m_PartNum = 1;/*how many part will the dict divided to*/
     int m_PartIdx = 0;/*which part this generator will handle*/
+    int m_Char1IdxStart;
+    int m_Char1IdxEnd;
 };
 //
 //char* PasDict = nullptr;
@@ -311,14 +370,14 @@ HRESULT DecryptingLoop(
 
     CDecryptCallbackConsole* consoleCb = static_cast<CDecryptCallbackConsole *>(consoleCallback);
 
-    int maxcount = 1000;
-    int printuint = 10;
+    int maxcount = 200;
+    int printuint = 100;
     int totalcount = 0;
     bool correct = false;
 
     //PasswdInit(4, 10, Default_Dict);
     PasswordGenerator pasGen;
-    pasGen.Initialize(4, 10, Default_Dict);
+    pasGen.Initialize(1, 10, Default_Dict, 2, 1);
     char* curr;
     if (archive && so)
     {
@@ -341,16 +400,16 @@ HRESULT DecryptingLoop(
 
             //if (so)
             {
-                //*so << endl << "Passwd:" << consoleCb->Password;
-                if ((totalcount % printuint) == 0)
-                {
-                    *so << endl << "Tried Times : " << totalcount;
-                    *so << endl << "Passwd:" << consoleCb->Password;
+                *so << endl << "Passwd:" << consoleCb->Password;
+                //if ((totalcount % printuint) == 0)
+                //{
+                //    *so << endl << "Tried Times : " << totalcount;
+                //    *so << endl << "Passwd:" << consoleCb->Password;
 
-                }
+                //}
 
             }
-        } while (!correct/* && totalcount < maxcount*/);
+        } while (!correct && totalcount < maxcount);
     }
 
     //PasswdExit();
@@ -554,7 +613,6 @@ static HRESULT DecompressArchive(
     }
 
 #endif
-
 
     HRESULT result;
     Int32 testMode = (options.TestMode && !calcCrc) ? 1 : 0;
