@@ -19,6 +19,7 @@
 
 #include "../CPP/7zip/UI/Console/ConsoleClose.h"
 
+#include "Decrypting.h"
 
 extern CStdOutStream *g_StdStream;
 extern CStdOutStream *g_ErrStream;
@@ -43,6 +44,4 @@ int DecryptingExecute(CArcCmdLineOptions& options,
     CExternalCodecs& __externalCodecs,
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats,
-    wchar_t* PatternFile,
-    bool* pDecryptDone,/*close flag, and also return true if success to decrypt*/
-    int ThreadIndex=0);
+    DECRYPT_ARGS& DecryptArgs);

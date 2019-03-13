@@ -11,6 +11,8 @@
 
 // TODO: add headers that you want to pre-compile here
 
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
 #include <windows.h>
 

@@ -78,14 +78,13 @@
 
 #include "DecryptCbConsole.h"
 
+#include "Decrypting.h"
+
+
 using namespace NWindows;
 using namespace NFile;
 using namespace NDir;
 using namespace NCommandLineParser;
-
-//char Default_Dict[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-char Default_Dict[] = "0123456789";
 
 //char CurrPasswd[64];
 //unsigned int curr_len = 1; //current password length
@@ -364,8 +363,7 @@ HRESULT DecryptingLoop(
     Int32 testMode, 
     IArchiveExtractCallback *extractCallback,
     IExtractCallbackUI* consoleCallback,
-    int ThreadIndex,
-    bool* pDecryptDone/*close flag, and also return true if success to decrypt*/)
+    DECRYPT_ARGS& DecryptArgs)
 {
     HRESULT result = E_FAIL;
 
@@ -380,13 +378,23 @@ HRESULT DecryptingLoop(
     bool correct = false;
 
     //PasswdInit(4, 10, Default_Dict);
+
+    if (DecryptArgs.Dict == nullptr)
+        DecryptArgs.Dict = (char*)Default_Dict;
+
     PasswordGenerator pasGen;
-    pasGen.Initialize(4, 10, Default_Dict, g_ThreadCount, ThreadIndex);
+    pasGen.Initialize(
+        DecryptArgs.MinPasswdLength,
+        DecryptArgs.MaxPasswdLength, 
+        DecryptArgs.Dict,
+        DecryptArgs.ThreadCount,
+        DecryptArgs.ThreadIndex);
+
     char* curr;
     wchar_t CorrectPasswd[100] = {};
     if (archive && so)
     {
-        *so << endl << "Thread Index =========> :" << ThreadIndex;
+        *so << endl << "Thread Index =========> :" << DecryptArgs.ThreadIndex;
         *so << endl << "first Passwd:" << consoleCb->Password;
 
         do {
@@ -409,7 +417,7 @@ HRESULT DecryptingLoop(
             //*pDecryptDone = correct;
             if (correct)
             {
-                *pDecryptDone = true;
+                *DecryptArgs.pDecryptState = true;
                 wcscpy_s(CorrectPasswd, 100, consoleCb->Password.Ptr());
             }
 
@@ -420,12 +428,12 @@ HRESULT DecryptingLoop(
                 //*so << endl << "Thread Id: " << ThreadIndex << ", Passwd:" << consoleCb->Password;
                 if ((totalcount % printuint) == 0)
                 {
-                    *so << endl << "Thread Id: " << ThreadIndex;
+                    *so << endl << "Thread Id: " << DecryptArgs.ThreadIndex;
                     *so << ", Tried Times : " << totalcount;
                     *so << ", Passwd:" << consoleCb->Password;
                 }
             }
-        } while (!*pDecryptDone && totalcount < maxcount);
+        } while (!*DecryptArgs.pDecryptState && totalcount < maxcount);
     }
 
     //PasswdExit();
@@ -434,12 +442,12 @@ HRESULT DecryptingLoop(
     {
         static bool printed = false;
         *so << endl << endl;
-        if (*pDecryptDone)
+        if (*DecryptArgs.pDecryptState)
         {
             if (!printed)
             {
                 *so << "Decryting Success!" << endl;
-                *so << "Thread Id: " << ThreadIndex << endl;
+                *so << "Thread Id: " << DecryptArgs.ThreadIndex << endl;
                 *so << "------------------------------" << endl;
                 *so << " password is \"" << CorrectPasswd/*consoleCb->Password*/ << "\"" << endl;
                 *so << "------------------------------" << endl;
@@ -472,8 +480,7 @@ static HRESULT DecompressArchive(
     CArchiveExtractCallback *ecs,
     UString &errorMessage,
     UInt64 &stdInProcessed,
-    int ThreadIndex,
-    bool* pDecryptDone/*close flag, and also return true if success to decrypt*/)
+    DECRYPT_ARGS& DecryptArgs)
 {
     const CArc &arc = arcLink.Arcs.Back();
     stdInProcessed = 0;
@@ -645,7 +652,7 @@ static HRESULT DecompressArchive(
 
     // JULIAN
     CStdOutStream *so = g_StdStream;
-    if (so && ThreadIndex == 0)
+    if (so && DecryptArgs.ThreadIndex == 0)
     {
         *so << endl;
         *so << "====== Decrypting Begin ======" << endl;
@@ -670,11 +677,11 @@ static HRESULT DecompressArchive(
         //result = archive->Extract(&realIndices.Front(), realIndices.Size(), testMode, ecs);
 
         //JULIAN
-        result = DecryptingLoop(archive, testMode, ecs, callback, ThreadIndex, pDecryptDone);
+        result = DecryptingLoop(archive, testMode, ecs, callback, DecryptArgs);
     }
 
     //JULIAN
-    if (so && ThreadIndex == 0)
+    if (so && DecryptArgs.ThreadIndex == 0)
     {
         *so << endl;
         *so << "======= Decrypting End =======" << endl;
@@ -702,9 +709,7 @@ HRESULT DecryptingExtract(
 #endif
     UString &errorMessage,
     CDecompressStat &st,
-    wchar_t* PatternFile,
-    int ThreadIndex,
-    bool* pDecryptDone/*close flag, and also return true if success to decrypt*/)
+    DECRYPT_ARGS& DecryptArgs)
 {
     st.Clear();
     UInt64 totalPackSize = 0;
@@ -907,7 +912,7 @@ HRESULT DecryptingExtract(
             options,
             calcCrc,
             extractCallback, ecs, errorMessage, packProcessed,
-            ThreadIndex, pDecryptDone));
+            DecryptArgs));
 
         if (!options.StdInMode)
             packProcessed = fi.Size + arcLink.VolumesSize;

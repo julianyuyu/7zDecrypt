@@ -30,6 +30,9 @@
     <ClInclude Include="avpsync.h">
       <Filter>thread</Filter>
     </ClInclude>
+    <ClInclude Include="Decrypting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

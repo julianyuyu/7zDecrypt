@@ -10,13 +10,75 @@ using namespace NWindows;
 CStdOutStream *g_StdStream = NULL;
 CStdOutStream *g_ErrStream = NULL;
 
+struct THREAD_CTXT
+{
+    CArcCmdLineOptions* options;
+    CCodecs* codecs;
+    CExternalCodecs* externalCodecs;
+    CObjectVector<COpenType>* types;
+    CIntVector* excludedFormats;
+
+    DECRYPT_ARGS DecryptArgs;
+};
+
+DWORD WINAPI DecryptingProc(LPVOID param)
+{
+    THREAD_CTXT* ctxt = (THREAD_CTXT*)param;
+
+    DecryptingExecute(
+        *ctxt->options,
+        ctxt->codecs,
+        *ctxt->externalCodecs,
+        *ctxt->types,
+        *ctxt->excludedFormats,
+        ctxt->DecryptArgs);
+
+    return 0;
+}
+
 void ThreadRun(
     CArcCmdLineOptions& options,
     CCodecs* codecs,
     CExternalCodecs& externalCodecs, /*dont edit this name*/
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats,
-    wchar_t* PatternFile);
+    DECRYPT_ARGS& Args)
+{
+    if (Args.ThreadCount == 0)
+    {
+        Args.ThreadCount = 1;
+        Args.ThreadIndex = 0;
+    }
+
+    AVPThread *threads = new AVPThread[Args.ThreadCount];
+    THREAD_CTXT *ctxt = new THREAD_CTXT[Args.ThreadCount];
+
+
+    // create thread and execture;
+    for (int i = 0; i < Args.ThreadCount; i++)
+    {
+        ctxt[i].options = &options;
+        ctxt[i].codecs = codecs;
+        ctxt[i].externalCodecs = &externalCodecs;
+        ctxt[i].types = &types;
+        ctxt[i].excludedFormats = &excludedFormats;
+
+        //args
+        ctxt[i].DecryptArgs = Args;
+        ctxt[i].DecryptArgs.ThreadIndex = i;
+
+        threads[i].Create(DecryptingProc, &ctxt[i]);
+    }
+
+    // wait for close
+    for (int i = 0; i < Args.ThreadCount; i++)
+    {
+        threads[i].WaitClose();
+    }
+
+    delete[] threads;
+    delete[] ctxt;
+}
 
 int wmain(int argc, wchar_t** argv)
 {
@@ -50,7 +112,7 @@ int wmain(int argc, wchar_t** argv)
         // app.exe -f patternfile archive.ext
         // app.exe archive.ext -f patternfile
 
-        int possibleIndex[] = {1, 2}; // -f arg can ben in 1st or 2nd place.
+        int possibleIndex[] = { 1, 2 }; // -f arg can ben in 1st or 2nd place.
 
         for (int i = 0; i < ARRAY_SIZE(possibleIndex); ++i)
         {
@@ -96,10 +158,26 @@ int wmain(int argc, wchar_t** argv)
 
     if (isDecryptMode)
     {
-        ThreadRun(options, codecs, externalCodecsDesc, types, excludedFormats, PatternFileName);
+        bool done = false;
 
-        //bool done = false;
-        //DecryptingExecute(options, codecs, externalCodecsDesc, types, excludedFormats, PatternFileName, &done);
+        DECRYPT_ARGS tmpArgs = {};
+        tmpArgs.MinPasswdLength = 4;
+        tmpArgs.MaxPasswdLength = 10;
+        tmpArgs.PatternFile = PatternFileName;
+        tmpArgs.ThreadCount = 4;
+        tmpArgs.ThreadIndex = 0;
+        tmpArgs.pDecryptState = &done;
+
+        // multi-thread.
+        if (1)
+        {
+            ThreadRun(options, codecs, externalCodecsDesc, types, excludedFormats, tmpArgs);
+        }
+        else
+        {
+            // single thread.
+            DecryptingExecute(options, codecs, externalCodecsDesc, types, excludedFormats, tmpArgs);
+        }
     }
     else
     {
@@ -107,73 +185,4 @@ int wmain(int argc, wchar_t** argv)
     }
     Release(codecs);
     return 0;
-}
-
-struct THREAD_CTXT
-{
-    int Index;
-    //bool ThreadDone; /*close flag, and also return true if success to decrypt*/
-    CArcCmdLineOptions* options;
-    CCodecs* codecs;
-    CExternalCodecs* externalCodecs;
-    CObjectVector<COpenType>* types;
-    CIntVector* excludedFormats;
-    wchar_t* PatternFile;
-};
-
-static bool GlobalDecryptDoneFlag = false;
-int g_ThreadCount = 1;
-
-DWORD WINAPI DecryptingProc(LPVOID param)
-{
-    THREAD_CTXT* ctxt = (THREAD_CTXT*)param;
-
-    DecryptingExecute(*ctxt->options,
-        ctxt->codecs,
-        *ctxt->externalCodecs,
-        *ctxt->types,
-        *ctxt->excludedFormats,
-        ctxt->PatternFile,
-        &GlobalDecryptDoneFlag,
-        ctxt->Index);
-
-    return 0;
-}
-
-void ThreadRun(
-    CArcCmdLineOptions& options,
-    CCodecs* codecs,
-    CExternalCodecs& externalCodecs, /*dont edit this name*/
-    CObjectVector<COpenType>& types,
-    CIntVector& excludedFormats,
-    wchar_t* PatternFile)
-{
-    const int threadNum = 4;
-    g_ThreadCount = threadNum;
-    AVPThread threads[threadNum];
-    THREAD_CTXT ctxt[threadNum];
-
-    // execture;
-    for (int i = 0; i < threadNum; i++)
-    {
-        //ctxt[i].ThreadDone = false;
-        ctxt[i].Index = i;
-        ctxt[i].options = &options;
-        ctxt[i].codecs = codecs;
-        ctxt[i].externalCodecs = &externalCodecs;
-        ctxt[i].types = &types;
-        ctxt[i].excludedFormats = &excludedFormats;
-        ctxt[i].PatternFile = PatternFile;
-
-        threads[i].Create(DecryptingProc, &ctxt[i]);
-
-    }
-
-    // wait for close
-    // TODO: should close once either thread succeeded to decrypt.
-    for (int i = 0; i < threadNum; i++)
-    {
-        threads[i].WaitClose();
-    }
-
 }

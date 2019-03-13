@@ -51,6 +51,7 @@
 #endif
 
 #include "DecryptCbConsole.h"
+#include "Decrypting.h"
 
 using namespace NWindows;
 using namespace NFile;
@@ -704,32 +705,12 @@ int Init(UStringVector& commandStrings,
   return 1;// means success and ready to execute.
 }
 
-HRESULT DecryptingExtract(
-    CCodecs *codecs,
-    const CObjectVector<COpenType> &types,
-    const CIntVector &excludedFormats,
-    UStringVector &arcPaths, UStringVector &arcPathsFull,
-    const NWildcard::CCensorNode &wildcardCensor,
-    const CExtractOptions &options,
-    IOpenCallbackUI *openCallback,
-    IExtractCallbackUI *extractCallback,
-#ifndef _SFX
-    IHashCalc *hash,
-#endif
-    UString &errorMessage,
-    CDecompressStat &st,
-    wchar_t* PatternFile,
-    int ThreadIndex,
-    bool* pDecryptDone/*close flag, and also return true if success to decrypt*/);
-
 int DecryptingExecute(CArcCmdLineOptions& options,
     CCodecs* codecs,
     CExternalCodecs& __externalCodecs, /*dont edit this name*/
     CObjectVector<COpenType>& types,
     CIntVector& excludedFormats,
-    wchar_t* PatternFile,
-    bool* pDecryptDone,/* = false*//*close flag, and also return true if success to decrypt*/
-    int ThreadIndex/*=0*/)
+    DECRYPT_ARGS& DecryptArgs)
 {
     //JULIAN
     //bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
@@ -870,7 +851,7 @@ int DecryptingExecute(CArcCmdLineOptions& options,
             ArchivePathsFullSorted,
             options.Censor.Pairs.Front().Head,
             eo, ecs, ecs, hashCalc, errorMessage, stat,
-            PatternFile, ThreadIndex, pDecryptDone);
+            DecryptArgs);
 
         ecs->ClosePercents();
 
