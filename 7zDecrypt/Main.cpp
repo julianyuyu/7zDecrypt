@@ -614,9 +614,9 @@ int Init(UStringVector& commandStrings,
   {
     //ShowCopyrightAndHelp(g_StdStream, false);
       *g_StdStream << endl;
-      *g_StdStream << "+-------------------------------------------------------+" << endl;
-      *g_StdStream << "| 7z Decryptor, for RAR/ZIP/7z/... build on top of 7zip |" << endl;
-      *g_StdStream << "+-------------------------------------------------------+" << endl;
+      *g_StdStream << L"+-------------------------------------------------------+" << endl;
+      *g_StdStream << L"| 7z Decryptor, for RAR/ZIP/7z/... build on top of 7zip |" << endl;
+      *g_StdStream << L"+-------------------------------------------------------+" << endl;
       *g_StdStream << endl;
 
   }
@@ -700,6 +700,7 @@ int Init(UStringVector& commandStrings,
   // JULIAN:
   outcodecs = codecs;
   //externalCodecsDesc = __externalCodecs;
+
   //int retCode = NExitCode::kSuccess;
   //return retCode;
   return 1;// means success and ready to execute.

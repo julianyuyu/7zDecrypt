@@ -96,6 +96,7 @@ int wmain(int argc, wchar_t** argv)
     bool isDecryptMode = false;
     wchar_t PatternFileName[MAX_PATH] = {};
     UStringVector cmdstrings;
+    int threadcount = 0;
 
     if (argc == 2)
     {
@@ -105,6 +106,20 @@ int wmain(int argc, wchar_t** argv)
         //
         // app.exe archive.ext
         isDecryptMode = true;
+        //wcscpy_s(PatternFileName, MAX_PATH, L"default.txt");
+    }
+    if (argc == 3)
+    {
+        // please make sure argv[1] is filename.
+        // and will use default password pattern in this case.
+
+        //
+        // app.exe -j4 archive.ext
+        isDecryptMode = true;
+        if (argv[1][0] == L'-' && argv[1][1] == L'j')
+        {
+            swscanf_s(argv[1] + 2, L"%d", &threadcount);
+        }
         //wcscpy_s(PatternFileName, MAX_PATH, L"default.txt");
     }
     else if (argc == 4)
@@ -144,6 +159,10 @@ int wmain(int argc, wchar_t** argv)
                 ++i;
                 continue;
             }
+            else if (argv[i][0] == L'-' && argv[i][1] == L'j')
+            {
+                continue;
+            }
         }
         cmdstrings.Add(UString(argv[i]));
     }
@@ -158,15 +177,27 @@ int wmain(int argc, wchar_t** argv)
 
     if (isDecryptMode)
     {
-        bool done = false;
+        bool gotPasswd = false;
+
+        if (threadcount == 0)
+        {
+            threadcount = 8;
+        }
 
         DECRYPT_ARGS tmpArgs = {};
         tmpArgs.MinPasswdLength = 4;
-        tmpArgs.MaxPasswdLength = 10;
+        tmpArgs.MaxPasswdLength = 16;
         tmpArgs.PatternFile = PatternFileName;
-        tmpArgs.ThreadCount = 4;
+        tmpArgs.ThreadCount = threadcount;
         tmpArgs.ThreadIndex = 0;
-        tmpArgs.pDecryptState = &done;
+        tmpArgs.pDecryptState = &gotPasswd;
+
+        tmpArgs.PrintRate = threadcount * 1000;
+        tmpArgs.MaxTryCount = 0;
+
+        tmpArgs.PasswdResult = new wchar_t[MAX_PASSWD_LEGTH+1];
+
+        wprintf_s(L"thread count = %d\n", tmpArgs.ThreadCount);
 
         // multi-thread.
         if (1)
@@ -175,8 +206,20 @@ int wmain(int argc, wchar_t** argv)
         }
         else
         {
+            tmpArgs.PrintRate = 1000;
             // single thread.
             DecryptingExecute(options, codecs, externalCodecsDesc, types, excludedFormats, tmpArgs);
+        }
+
+        // done.
+        if (gotPasswd == true)
+        {
+            FILE *f;
+            if (!_wfopen_s(&f, L"passwd.txt", L"wt"))
+            {
+                fwprintf_s(f, L"Passwd is : %s\n", tmpArgs.PasswdResult);
+                fclose(f);
+            }
         }
     }
     else

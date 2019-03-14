@@ -2,92 +2,21 @@
 
 #include "7zDecrypt.h"
 
-
 #include "../CPP/Common/MyWindows.h"
-//
-//#ifdef _WIN32
-//#include <Psapi.h>
-//#endif
-//
-//#include "../C/CpuArch.h"
-//
-//#include "../CPP/Common/Common.h"
-//#include "../CPP/Common/MyInitGuid.h"
-//
-//#include "../CPP/Common/CommandLineParser.h"
-//#include "../CPP/Common/IntToString.h"
-//#include "../CPP/Common/MyException.h"
-//#include "../CPP/Common/StringConvert.h"
-//#include "../CPP/Common/StringToInt.h"
-//#include "../CPP/Common/UTFConvert.h"
-//
-//#include "../CPP/Windows/ErrorMsg.h"
-//
-//#include "../CPP/Windows/TimeUtils.h"
-//
-//#include "../CPP/7zip/UI/Common/ArchiveCommandLine.h"
-//#include "../CPP/7zip/UI/Common/Bench.h"
-//#include "../CPP/7zip/UI/Common/ExitCode.h"
-//#include "../CPP/7zip/UI/Common/Extract.h"
-//
-//#ifdef EXTERNAL_CODECS
-//#include "../CPP/7zip/UI/Common/LoadCodecs.h"
-//#endif
-//
-//#include "../CPP/7zip/Common/RegisterCodec.h"
-//
-//#include "../CPP/7zip/UI/Console/BenchCon.h"
-//#include "../CPP/7zip/UI/Console/ConsoleClose.h"
-//#include "../CPP/7zip/UI/Console/ExtractCallbackConsole.h"
-//#include "../CPP/7zip/UI/Console/List.h"
-//#include "../CPP/7zip/UI/Console/OpenCallbackConsole.h"
-//#include "../CPP/7zip/UI/Console/UpdateCallbackConsole.h"
-//
-//#include "../CPP/7zip/UI/Console/HashCon.h"
-//
-//#ifdef PROG_VARIANT_R
-//#include "../C/7zVersion.h"
-//#else
-//#include "../CPP/7zip/MyVersion.h"
-//#endif
-
-////
-
-//#include "../CPP/Windows/FileFind.h"
-//
-//#include "../CPP/7zip/Archive/IArchive.h"
-//
-//#include "../CPP/7zip/UI/Common/ArchiveExtractCallback.h"
-//#include "../CPP/7zip/UI/Common/ArchiveOpenCallback.h"
-//#include "../CPP/7zip/UI/Common/ExtractMode.h"
-//#include "../CPP/7zip/UI/Common/Property.h"
-//
-///
-
-//#include "../C/Sort.h"
-//
-//#include "../CPP/Common/StringConvert.h"
-//
 #include "../CPP/Windows/FileDir.h"
 #include "../CPP/Windows/PropVariant.h"
 #include "../CPP/Windows/PropVariantConv.h"
-//
+
 #include "../CPP/7zip/UI/Common/ExtractingFilePath.h"
-//#include "../CPP/7zip/UI/Common/SetProperties.h"
-//////
 
 #include "DecryptCbConsole.h"
 
 #include "Decrypting.h"
 
-
 using namespace NWindows;
 using namespace NFile;
 using namespace NDir;
 using namespace NCommandLineParser;
-
-//char CurrPasswd[64];
-//unsigned int curr_len = 1; //current password length
 
 /* v9.31: BUG was fixed:
    Sorted list for file paths was sorted with case insensitive compare function.
@@ -101,17 +30,17 @@ public:
     PasswordGenerator() {}
     ~PasswordGenerator() { Destroy(); }
 
-    bool Initialize(int minLen, int MaxLen, char* dict,
+    bool Initialize(int minLen, int MaxLen, wchar_t* dict,
         int partNum=1/*how many part will the dict devided to*/,
         int partIdx=0/*which part this generator will handle*/)
     {
         m_PasDict = dict;
-        m_DictLen = strlen(m_PasDict);
+        m_DictLen = wcslen(m_PasDict);
 
         m_MaxPasLen = MaxLen;
-        if (m_MaxPasLen > m_DictLen)
+        if (m_MaxPasLen > MAX_PASSWD_LEGTH)
         {
-            m_MaxPasLen = m_DictLen;
+            m_MaxPasLen = MAX_PASSWD_LEGTH;
         }
 
         //init port devidtion
@@ -143,7 +72,7 @@ public:
 
         m_PasLen = minLen;
         m_CharIndices = new int[m_MaxPasLen];
-        m_CurrPas = new char[m_MaxPasLen + 1];
+        m_CurrPas = new wchar_t[m_MaxPasLen + 1];
 
         //memset(m_CharIndices, 0, sizeof(int) * m_MaxPasLen);
         //memset(m_CurrPas, 0, sizeof(char) * (m_MaxPasLen + 1));
@@ -165,7 +94,7 @@ public:
         delete[] m_CharIndices;
     }
 
-    char* UpdatePassword()
+    wchar_t* UpdatePassword()
     {
         //for (int i = 0; i < PasLen; ++i)
         //{
@@ -242,122 +171,26 @@ public:
             m_CharIndices[m_PasLen - 1]++;
         }
 
-        m_CurrPas[m_PasLen] = '\0';
+        m_CurrPas[m_PasLen] = L'\0';
 
         //m_ConsoleCb->Password = UString(CurrPas);
 
         return m_CurrPas;
     }
 protected:
-    char* m_PasDict = nullptr;
+    wchar_t* m_PasDict = nullptr;
     int m_DictLen = 0;
     int m_PasLen = 1;
     int m_MaxPasLen = 0;
     int* m_CharIndices = nullptr;
-    char* m_CurrPas = nullptr;
+    wchar_t* m_CurrPas = nullptr;
 
     int m_PartNum = 1;/*how many part will the dict divided to*/
     int m_PartIdx = 0;/*which part this generator will handle*/
     int m_Char1IdxStart;
     int m_Char1IdxEnd;
 };
-//
-//char* PasDict = nullptr;
-//int DictLen = 0;
-//int PasLen = 1;
-//int MaxPasLen = 0;
-//int* CharIndices = nullptr;
-//char* CurrPas = nullptr;
-//
-//void PasswdInit(int minLen, int MaxLen, char* dict)
-//{
-//    PasDict = dict;
-//    DictLen = strlen(PasDict);
-//    MaxPasLen = MaxLen;
-//
-//    if (MaxPasLen > DictLen)
-//    {
-//        MaxPasLen = DictLen;
-//    }
-//
-//    PasLen = minLen;
-//    CharIndices = new int[MaxPasLen];
-//    CurrPas = new char[MaxPasLen+1];
-//    memset(CharIndices, 0, sizeof(int) * MaxPasLen);
-//    memset(CurrPas, 0, sizeof(char) * (MaxPasLen+1));
-//
-//    for (int i = 0; i < PasLen; ++i)
-//    {
-//        CurrPas[i] = PasDict[0];
-//    }
-//}
-//
-//void PasswdExit()
-//{
-//    delete[] CurrPas;
-//    delete[] CharIndices;
-//}
-//
-//bool UpdatePassword(CDecryptCallbackConsole* consoleCb)
-//{
-//    //for (int i = 0; i < PasLen; ++i)
-//    //{
-//    //    CurrPas
-//    //}
-//    int NowIdx = PasLen - 1;
-//
-//    //CurrPas[NowIdx] = PasDict[CharIndices[NowIdx]];
-//    //CharIndices[NowIdx]++;
-//
-//    // if all char in pas is last char in dict, then expand pas len.
-//    int checkIdx = NowIdx;
-//    bool NeedExpend = true;
-//    while (checkIdx >= 0)
-//    {
-//        if (CharIndices[checkIdx] >= DictLen)
-//        {
-//            CharIndices[checkIdx] = 0;
-//            CurrPas[checkIdx] = PasDict[0];
-//            checkIdx--;
-//
-//            if (checkIdx < 0)
-//                break;
-//            CharIndices[checkIdx]++;
-//        }
-//        else
-//        {
-//            NeedExpend = false;
-//            CurrPas[checkIdx] = PasDict[CharIndices[checkIdx]];
-//            CharIndices[NowIdx]++; // update last bit.
-//            break;
-//        }
-//    }
-//
-//    if (NeedExpend)
-//    {
-//        PasLen++;
-//        if (PasLen > MaxPasLen)
-//            return false;
-//
-//        for (int i = 0; i < PasLen; ++i)
-//        {
-//            CharIndices[i] = 0;
-//            CurrPas[i] = PasDict[0];
-//        }
-//
-//        CharIndices[PasLen - 1]++;
-//    }
-//
-//    CurrPas[PasLen] = '\0';
-//    
-//    consoleCb->Password = UString(CurrPas);
-//
-//    return true;
-//}
 
-extern int g_ThreadCount;
-
-// JULIAN
 HRESULT DecryptingLoop(
     IInArchive *archive,
     Int32 testMode, 
@@ -372,15 +205,13 @@ HRESULT DecryptingLoop(
 
     CDecryptCallbackConsole* consoleCb = static_cast<CDecryptCallbackConsole *>(consoleCallback);
 
-    int maxcount = 4000;
-    int printuint = 100;
-    int totalcount = 0;
+    int maxcount = DecryptArgs.MaxTryCount;
+    int printuint = DecryptArgs.PrintRate;
+    static unsigned int totalcount = 0;
     bool correct = false;
 
-    //PasswdInit(4, 10, Default_Dict);
-
     if (DecryptArgs.Dict == nullptr)
-        DecryptArgs.Dict = (char*)Default_Dict;
+        DecryptArgs.Dict = (wchar_t*)Default_Dict;
 
     PasswordGenerator pasGen;
     pasGen.Initialize(
@@ -390,12 +221,12 @@ HRESULT DecryptingLoop(
         DecryptArgs.ThreadCount,
         DecryptArgs.ThreadIndex);
 
-    char* curr;
-    wchar_t CorrectPasswd[100] = {};
+    wchar_t* curr;
+    //wchar_t CorrectPasswd[MAX_PASSWD_LEGTH+1] = {};
     if (archive && so)
     {
-        *so << endl << "Thread Index =========> :" << DecryptArgs.ThreadIndex;
-        *so << endl << "first Passwd:" << consoleCb->Password;
+        *so << endl << L"Thread Index =========> :" << DecryptArgs.ThreadIndex;
+        *so << endl << L"first Passwd:" << consoleCb->Password;
 
         do {
 
@@ -418,22 +249,23 @@ HRESULT DecryptingLoop(
             if (correct)
             {
                 *DecryptArgs.pDecryptState = true;
-                wcscpy_s(CorrectPasswd, 100, consoleCb->Password.Ptr());
+                wcscpy_s(DecryptArgs.PasswdResult, MAX_PASSWD_LEGTH + 1, consoleCb->Password.Ptr());
             }
 
-            totalcount++;
+            //totalcount++;
+            InterlockedIncrement(&totalcount);
 
             //if (so)
             {
                 //*so << endl << "Thread Id: " << ThreadIndex << ", Passwd:" << consoleCb->Password;
                 if ((totalcount % printuint) == 0)
                 {
-                    *so << endl << "Thread Id: " << DecryptArgs.ThreadIndex;
-                    *so << ", Tried Times : " << totalcount;
-                    *so << ", Passwd:" << consoleCb->Password;
+                    *so << endl << L"Tried Times : " << totalcount;
+                    *so << L", Thread Id: " << DecryptArgs.ThreadIndex;
+                    *so << L", Passwd: " << consoleCb->Password;
                 }
             }
-        } while (!*DecryptArgs.pDecryptState && totalcount < maxcount);
+        } while (!*DecryptArgs.pDecryptState && (maxcount == 0 || (totalcount < maxcount)));
     }
 
     //PasswdExit();
@@ -446,23 +278,24 @@ HRESULT DecryptingLoop(
         {
             if (!printed)
             {
-                *so << "Decryting Success!" << endl;
-                *so << "Thread Id: " << DecryptArgs.ThreadIndex << endl;
-                *so << "------------------------------" << endl;
-                *so << " password is \"" << CorrectPasswd/*consoleCb->Password*/ << "\"" << endl;
-                *so << "------------------------------" << endl;
+
+                *so << L"Decryting Success!" << endl;
+                *so << L"Thread Id: " << DecryptArgs.ThreadIndex << endl;
+                *so << L"------------------------------" << endl;
+                *so << L" password is \"" << DecryptArgs.PasswdResult/*consoleCb->Password*/ << L"\"" << endl;
+                *so << L"------------------------------" << endl;
                 printed = true;
             }
         }
         else
         {
-            *so << "Done decryting, password not found!" << endl;
+            *so << L"Done decryting, password not found!" << endl;
         }
 
-        *so << "try decryting for " << totalcount << " times!" << endl;
+        *so << L"try decryting for " << totalcount << L" times!" << endl;
 
         if (FAILED(result))
-            *so << "DecrytingLoop error!" << endl;
+            *so << L"DecrytingLoop error!" << endl;
     }
     return result;
 }
@@ -655,7 +488,7 @@ static HRESULT DecompressArchive(
     if (so && DecryptArgs.ThreadIndex == 0)
     {
         *so << endl;
-        *so << "====== Decrypting Begin ======" << endl;
+        *so << L"====== Decrypting Begin ======" << endl;
         *so << endl;
     }
 
@@ -669,7 +502,7 @@ static HRESULT DecompressArchive(
         //JULIAN
         if (so)
         {
-            *so << "long code path!!!" << endl;
+            *so << L"long code path!!!" << endl;
         }
     }
     else
@@ -684,7 +517,7 @@ static HRESULT DecompressArchive(
     if (so && DecryptArgs.ThreadIndex == 0)
     {
         *so << endl;
-        *so << "======= Decrypting End =======" << endl;
+        *so << L"======= Decrypting End =======" << endl;
         *so << endl;
     }
 

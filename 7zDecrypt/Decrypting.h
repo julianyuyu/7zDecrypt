@@ -2,10 +2,12 @@
 
 #include "pch.h"
 
+#define MAX_PASSWD_LEGTH    32
 
-//const char Default_Dict[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const wchar_t Default_Dict[] = L"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<>,.?:;{}[]()|=_+-*&^%$#@!~ ";
 
-const char Default_Dict[] = "0123456789";
+//const wchar_t Default_Dict[] = L"0123456789";
+//const wchar_t Default_Dict[] = L"abcms1ft547[]()";
 
 struct DECRYPT_ARGS
 {
@@ -13,12 +15,17 @@ struct DECRYPT_ARGS
     int MinPasswdLength;
     int MaxPasswdLength;
     wchar_t* PatternFile;
-    char* Dict;
+    wchar_t* Dict;
+    wchar_t* PasswdResult;
 
     // thread args.
     int ThreadCount;
     int ThreadIndex;
     bool* pDecryptState; /*close flag, and also return true if success to decrypt*/
+
+    // app settings.
+    int PrintRate; // frequence of message printint.
+    int MaxTryCount;
 };
 
 HRESULT DecryptingExtract(
